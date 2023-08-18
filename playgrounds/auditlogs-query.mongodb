@@ -1,0 +1,7 @@
+use('applications');
+
+db.getCollection('auditlogs')
+  .find(
+    {},
+    {}
+  ).toArray();

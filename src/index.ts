@@ -7,8 +7,11 @@ import dotenv from "dotenv"
 async function main() {
   dotenv.config();
   set('strictQuery', false);
+  console.info("Connecting to DB...");
   await connect(config("DATABASE_URL"));
+  console.info("Connected to DB");
   try {
+    console.info("Starting transaction");
     await connection.transaction(async (session) => {
       const collectionName = "collectionName";
       const eventId = "eventId";
@@ -24,15 +27,18 @@ async function main() {
           user: user,
           delta,
         });
+        console.info(`Saving document number ${counter}`);
         await newChangeEvent.save({ session });
-        // await newChangeEvent.save();
+        console.info(`Saved document number ${counter}`);
       }  
     });
-    console.info("Successfully inserted events");
+    console.info("Successfully inserted documents");
   } catch (e) {
-    console.error("Error while trying to insert events", e);
+    console.error("Error while trying to insert documents", e);
   } finally {
+    console.info("Closing DB connection");
     await connection.close();
+    console.info("Closed DB connection");
   }
 }
 
